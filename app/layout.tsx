@@ -1,14 +1,19 @@
-import Head from 'next/head';
+import './globals.css';
+
+export const metadata = {
+  title: 'Vibyn',
+  description: 'Now you can actually say you met them at a bar.',
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <Head>
+      <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap"
           rel="stylesheet"
         />
-      </Head>
+      </head>
       <body className="bg-black text-white">{children}</body>
     </html>
   );
