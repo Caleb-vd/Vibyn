@@ -7,27 +7,32 @@ const locations = ['bar', 'club', 'cafe', 'library'];
 
 export default function Home() {
   const [locationIndex, setLocationIndex] = useState(0);
+
+useEffect(() => {
+  const cycle = setInterval(() => {
+    setLocationIndex((i) => (i + 1) % locations.length);
+  }, 1500); // changes every 1.5 seconds
+
+  return () => clearInterval(cycle);
+}, []);
   const [inView, setInView] = useState(false);
   const phoneRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const cycle = setInterval(() => {
-      setLocationIndex((i) => (i + 1) % locations.length);
-    }, 1500);
-    return () => clearInterval(cycle);
-  }, []);
-
-  useEffect(() => {
+    const refCopy = phoneRef.current;
+  
+    if (!refCopy) return;
+  
     const observer = new IntersectionObserver(
       ([entry]) => setInView(entry.isIntersecting),
       { threshold: 0.3 }
     );
-
-    if (phoneRef.current) observer.observe(phoneRef.current);
-    return () => {
-      if (phoneRef.current) observer.unobserve(phoneRef.current);
-    };
+  
+    observer.observe(refCopy);
+  
+    return () => observer.unobserve(refCopy);
   }, []);
+  
 
   return (
     <main className="bg-black text-white min-h-screen">
@@ -52,8 +57,9 @@ export default function Home() {
     <h2 className="text-4xl md:text-6xl font-semibold leading-tight text-white max-w-5xl px-4 mb-10">
       Now you can actually say you met them at a{' '}
       <span className="text-[#39FF14] drop-shadow-[0_0_8px_#39FF14] font-bold">
-        {locations[locationIndex]}
-      </span>.
+  {locations[locationIndex]}
+</span>
+
     </h2>
 
     {/* Email Input – just below tagline */}
